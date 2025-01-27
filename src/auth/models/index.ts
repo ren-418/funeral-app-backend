@@ -10,9 +10,9 @@ const AuthSchema = new Schema({
 		type: String,
 		default: "",
 	},
-	address: {
-		type: String,
-		default: '',
+	password: {
+		type:String,
+		default:""
 	},
 	lasttime: {
 		type: Number,

@@ -1,7 +1,7 @@
 interface AuthDataObject {
     name?: string
-	email?: string
-	address: string
+	email?: string,
+	password?:string
 	lasttime: number
 	created: number
 }

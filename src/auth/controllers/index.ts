@@ -1,38 +1,34 @@
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcryptjs'
+
 import { Response, Request, NextFunction } from "express";
 import { Now } from "../../utils";
 import setlog from "../../utils/setlog";
 import config from "../../../config.json";
-import { toChecksumAddress } from "../../utils/blockchain";
 import authDatas from "../data-access";
 import authService from "../services";
+
 
 const authController = {
 	// This function is for signing up a new user.
 	signup: async (req: Request, res: Response) => {
 		try {
-			const { name, email, address, sign } = req.body;
+			const { name, email, password} = req.body;
 
 			// service
-			const existsMail = await authService.checkExistOfAccount({ name, email, address });
+			const existsMail = await authService.checkExistOfAccount({ name, email });
 			if (existsMail.res === true) {
 				throw new Error(`${existsMail.param} is already exist!`);
 			};
-
-			// service
-			if (!authService.verifySignature({ sig: sign, address: address })) {
-				throw new Error("invalid signature")
-			};
-
+			const hashedPassword =  await bcrypt.hash(password, 10);
 			// data access
 			await authDatas.AuthDB.create({
 				name: name,
 				email: email,
-				address: toChecksumAddress(address),
+				password:hashedPassword,
 				created: Now(),
 				lasttime: Now(),
 			});
-
 			return res.status(200).json({ message: "success" });
 		} catch (err) {
 			setlog("request", err);
@@ -41,31 +37,29 @@ const authController = {
 	},
 	login: async (req: Request, res: Response) => {
 		try {
-			const { address, sign } = req.body;
+			const { email,password } = req.body;
 
-			// service
-			if (!authService.verifySignature({ sig: sign, address: address })) {
-				throw new Error("invalid signature")
-			};
 			// data access
 			const userData = await authDatas.AuthDB.findOne({
-				filter: { $or: [{ address: toChecksumAddress(address) }] }
+				filter: { $or: [{ email: email }] }
 			});
 			if (!userData) {
 				return res.status(200).send({ message: "No exists user." });
 			}
-
 			// data access
+			const isMatch = await bcrypt.compare(password, userData.password);
+			if (!isMatch) {
+				return res.status(400).send('Invalid username or password');
+			}
 			const data = {
 				email: userData?.email,
 				name: userData?.name,
-				address: toChecksumAddress(address)
 			};
 			const token = jwt.sign(data, config.JWT_SECRET, {
 				expiresIn: "144h",
 			});
 			await authDatas.AuthDB.update({
-				filter: { address: data.address },
+				filter: { email: email },
 				update: { lasttime: Now() }
 			})
 			return res.status(200).json({ message: "success", token });
@@ -103,6 +97,7 @@ const authController = {
 					next();
 				}
 			);
+			
 		} catch (err: any) {
 			if (err) return res.sendStatus(403);
 		}
