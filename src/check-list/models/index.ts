@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const checkListSchema = new Schema({
-    title: {
+    id: {
+        type: String,
+        default: "",
+    },
+    userId: {
         type: String,
         default: "",
     },
@@ -11,12 +15,16 @@ const checkListSchema = new Schema({
         default: "",
     },
     completd: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
     },
     created: {
         type: Number,
         default: 0,
+    },
+    sharedTo: {
+        type: [String],
+        default: []
     }
 });
 

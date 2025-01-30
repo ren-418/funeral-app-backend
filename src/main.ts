@@ -2,15 +2,19 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import rateLimit from 'express-rate-limit'
+import { Server } from "socket.io";
+import http from "http";
 
 // External Modules
 import { Routes } from "./Routes";
 import config from "../config.json";
 import setlog from "./utils/setlog";
+import { setUpSocket } from "./socket";
 
 // Get router
 const router: express.Router = express.Router();
 const app: express.Express = express();
+
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -19,7 +23,9 @@ const limiter = rateLimit({
 })
 
 const connectDatabase = async (mongoUrl: string) => {
+
 	try {
+
 		const options = {
 			autoCreate: true,
 			keepAlive: true,
@@ -54,9 +60,15 @@ if (!config.debug) {
 }
 
 // API Router
+
+
+
 Routes(router);
 app.use("/api", router);
 
+//Socket
+const httpServer = http.createServer(app);
+setUpSocket(httpServer);
 
 connectDatabase(config.DATABASE).then(() => {
 	app.listen(config.PORT, () => {
@@ -67,3 +79,7 @@ connectDatabase(config.DATABASE).then(() => {
 });
 
 export default app;
+
+function createServer(app: express.Express) {
+	throw new Error("Function not implemented.");
+}

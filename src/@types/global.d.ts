@@ -11,6 +11,7 @@ interface CheckListDataObject {
 	userId:string,
 	title: string,
 	desc?: string,
+	sharedTo:string[],
 	completed:boolean
 	created: number
 }
