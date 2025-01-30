@@ -5,15 +5,6 @@ import authDatas from "../data-access";
 // check if account is exist
 const checkExistOfAccount = async ({ name, email }) => {
 	
-	// var existsName = await authDatas.AuthDB.findOne({
-	// 	filter: { name: name }
-	// });
-	// if (!!existsName)
-	// 	return {
-	// 		res: true,
-	// 		param: "name",
-	// 		msg: "name is Exist"
-	// 	}
 	var existsEmail = await authDatas.AuthDB.findOne({
 		filter: { email: email }
 	});

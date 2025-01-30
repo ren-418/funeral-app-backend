@@ -19,7 +19,7 @@ const authController = {
 			const existsMail = await authService.checkExistOfAccount({ name, email });
 			if (existsMail.res === true) {
 				throw new Error(`${existsMail.param} is already exist!`);
-			};
+			};	
 			const hashedPassword =  await bcrypt.hash(password, 10);
 			// data access
 			await authDatas.AuthDB.create({
