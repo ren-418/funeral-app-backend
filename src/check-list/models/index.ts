@@ -10,6 +10,10 @@ const checkListSchema = new Schema({
         type: String,
         default: "",
     },
+    title: {
+        type: String,
+        default: ""
+    },
     desc: {
         type: String,
         default: "",

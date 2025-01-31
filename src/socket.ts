@@ -25,3 +25,12 @@ export const emitNotificationOfCheckList = (sharedUser:string,getSharedUser:stri
         });
     }
 }
+
+export const emitNotificationOfVault = (sharedUser:string,getSharedUser:string,data:any) => {
+    if (io) {
+        io.to(getSharedUser).emit("shared-checkList", {
+            sharedUser:sharedUser,
+            data:data
+        });
+    }
+}
