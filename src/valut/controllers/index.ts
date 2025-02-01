@@ -128,8 +128,14 @@ const vaultController = {
         try {
             const { id, recevierId } = req.body;
             const foundItem = await vaultDatas.vaultDB.findOne({ filter: { id: id } });
-            const senderId = foundItem.userId
-            const addedShares = foundItem.sharedTo.push(recevierId);
+            const senderId = foundItem.userId;
+            if (!foundItem.sharedTo.includes(recevierId)) {
+                foundItem.sharedTo.push(recevierId);
+            } else {
+                return res.status(302).send({ message: "error", data: "Already Shared" });
+            }
+
+            const addedShares = foundItem.sharedTo;
             const updatedItem = await vaultDatas.vaultDB.update({ filter: { id: id }, update: { sharedTo: addedShares } });
 
             emitNotificationOfVault(senderId, recevierId, updatedItem)

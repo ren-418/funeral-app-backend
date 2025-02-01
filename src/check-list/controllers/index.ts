@@ -19,7 +19,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const checkListController = {
-
     newCheckList: async (req: Request, res: Response) => {
         try {
             const { userId, title, desc } = req.body;
@@ -89,9 +88,9 @@ const checkListController = {
     updateItem: async (req: Request, res: Response) => {
         try {
             const { id, userId, title, desc, completed } = req.body;
-            const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id, userId: userId }, update: { title: title, desc: desc, completed: completed } });
-            if (!!updatedItem) {
-                return res.status(200).json({ message: "success", data: updatedItem });
+            const result = await checkListDatas.checkListDB.update({ filter: { id: id, userId: userId }, update: { title: title, desc: desc, completed: completed } });
+            if (!!result) {
+                return res.status(200).json({ message: "success"});
             } else {
                 return res.status(404).json({ message: "Update failed" });
             }
@@ -114,13 +113,19 @@ const checkListController = {
             return res.status(200).send({ message: err.message || "internal error" });
         }
     },
-
     shareItem: async (req: Request, res: Response) => {
         try {
             const { id, recevierId } = req.body;
             const foundItem = await checkListDatas.checkListDB.findOne({ filter: { id: id } });
             const senderId = foundItem.userId
-            const addedShares = foundItem.sharedTo.push(recevierId);
+            if (!foundItem.sharedTo.includes(recevierId)) {
+                foundItem.sharedTo.push(recevierId);
+            } else {
+                return res.status(302).send({ message:"error",data: "Already Shared" });
+            }
+            
+            const addedShares = foundItem.sharedTo;
+            console.log("addedShares :::", addedShares, recevierId);
             const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id }, update: { sharedTo: addedShares } });
 
             emitNotificationOfCheckList(senderId, recevierId, updatedItem)
@@ -133,7 +138,7 @@ const checkListController = {
                 html: `<p>Click on the following link to download app:</p><a href="https://www.apple.com/app-store/">Download app</a>`,
             };
             const info = await transporter.sendMail(mailOptions);
-            return info.response || null
+            return res.status(200).send({ message:"success",data:info.response || null });
         } catch (err) {
             setlog("request", err);
             return res.status(200).send({ message: err.message || "internal error" });

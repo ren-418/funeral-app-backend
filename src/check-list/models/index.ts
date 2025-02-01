@@ -18,7 +18,7 @@ const checkListSchema = new Schema({
         type: String,
         default: "",
     },
-    completd: {
+    completed: {
         type: Boolean,
         default: false
     },
