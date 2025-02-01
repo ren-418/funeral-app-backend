@@ -62,7 +62,7 @@ const authController = {
 				filter: { email: email },
 				update: { lasttime: Now() }
 			})
-			return res.status(200).json({ message: "success", token });
+			return res.status(200).json({ message: "success", token:token,email:email, });
 		} catch (err) {
 			setlog("request", err);
 			res.status(200).send({ message: "internal error" });

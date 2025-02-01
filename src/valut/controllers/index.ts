@@ -18,7 +18,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const vaultController = {
-
     newVault: async (req: any, res: Response) => {
         try {
             const { title, desc, userId } = req.body;
@@ -124,6 +123,7 @@ const vaultController = {
             return res.status(200).send({ message: err.message || "internal error" });
         }
     },
+
     shareItem: async (req: Request, res: Response) => {
         try {
             const { id, recevierId } = req.body;
