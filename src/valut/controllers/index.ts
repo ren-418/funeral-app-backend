@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const vaultController = {
+
     newVault: async (req: any, res: Response) => {
         try {
             const { title, desc, userId } = req.body;
@@ -138,7 +139,7 @@ const vaultController = {
             const addedShares = foundItem.sharedTo;
             const updatedItem = await vaultDatas.vaultDB.update({ filter: { id: id }, update: { sharedTo: addedShares } });
 
-            emitNotificationOfVault(senderId, recevierId, updatedItem)
+            emitNotificationOfVault(senderId, recevierId, updatedItem, true)
 
             const mailOptions = {
                 from: 'jillianhereda@gmail.com',
@@ -148,12 +149,36 @@ const vaultController = {
                 html: `<p>Click on the following link to download app:</p><a href="https://www.apple.com/app-store/">Download app</a>`,
             };
             const info = await transporter.sendMail(mailOptions);
-            return info.response || null
+            return res.status(200).send({ message:"success",data:info.response || null });
         } catch (err) {
             setlog("request", err);
             return res.status(200).send({ message: err.message || "internal error" });
         }
     },
+    unShareItem: async (req: Request, res: Response) => {
+        try {
+            const { id, recevierId } = req.body;
+            const foundItem = await vaultDatas.vaultDB.findOne({ filter: { id: id } });
+            const senderId = foundItem.userId;
+            const removeFromSharedTo = (foundItem, receiverId) => {
+                foundItem.sharedTo = foundItem.sharedTo.filter(id => id !== receiverId);
+            }
+            if (!foundItem.sharedTo.includes(recevierId)) {
+                removeFromSharedTo(foundItem, recevierId);
+            } else {
+                return res.status(302).send({ message: "error", data: " Already unshared item" });
+            }
+
+            const removedShares = foundItem.sharedTo;
+            const updatedItem = await vaultDatas.vaultDB.update({ filter: { id: id }, update: { sharedTo: removedShares } });
+            emitNotificationOfVault(senderId, recevierId, updatedItem, false);
+            return res.status(200).send({ message:"success" });
+        } catch (err) {
+            setlog("request", err);
+            return res.status(200).send({ message: err.message || "internal error" });
+        }
+    },
+
 }
 
 export default vaultController;

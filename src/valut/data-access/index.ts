@@ -13,7 +13,7 @@ const vaultDB = {
         return vaultModels.vault.findOne(filter);
     },
     find: async ({ filter }: { filter: any }) => {
-        return vaultModels.vault.find(filter);
+        return vaultModels.vault.find(filter).sort({ created: -1 });
     },
     update: async ({ filter, update }: { filter: any, update: any }) => {
         return vaultModels.vault.findOneAndUpdate(

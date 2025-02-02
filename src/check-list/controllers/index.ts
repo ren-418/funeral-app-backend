@@ -128,7 +128,7 @@ const checkListController = {
             console.log("addedShares :::", addedShares, recevierId);
             const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id }, update: { sharedTo: addedShares } });
 
-            emitNotificationOfCheckList(senderId, recevierId, updatedItem)
+            emitNotificationOfCheckList(senderId, recevierId, updatedItem, true)
 
             const mailOptions = {
                 from: 'jillianhereda@gmail.com',
@@ -139,6 +139,29 @@ const checkListController = {
             };
             const info = await transporter.sendMail(mailOptions);
             return res.status(200).send({ message:"success",data:info.response || null });
+        } catch (err) {
+            setlog("request", err);
+            return res.status(200).send({ message: err.message || "internal error" });
+        }
+    },
+    unShareItem: async (req: Request, res: Response) => {
+        try {
+            const { id, recevierId } = req.body;
+            const foundItem = await checkListDatas.checkListDB.findOne({ filter: { id: id } });
+            const senderId = foundItem.userId;
+            const removeFromSharedTo = (foundItem, receiverId) => {
+                foundItem.sharedTo = foundItem.sharedTo.filter(id => id !== receiverId);
+            }
+            if (!foundItem.sharedTo.includes(recevierId)) {
+                removeFromSharedTo(foundItem, recevierId);
+            } else {
+                return res.status(302).send({ message: "error", data: " Already unshared item" });
+            }
+
+            const removedShares = foundItem.sharedTo;
+            const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id }, update: { sharedTo: removedShares } });
+            emitNotificationOfCheckList(senderId, recevierId, updatedItem, false);
+            return res.status(200).send({ message:"success" });
         } catch (err) {
             setlog("request", err);
             return res.status(200).send({ message: err.message || "internal error" });

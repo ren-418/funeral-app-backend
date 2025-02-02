@@ -13,7 +13,7 @@ const checkListDB = {
         return checkListModels.CheckList.findOne(filter);
     },
     find: async ({ filter }: { filter: any }) => {
-        return checkListModels.CheckList.find(filter);
+        return checkListModels.CheckList.find(filter).sort({ created: -1 });
     },
     update: async ({ filter, update }: { filter: any, update: any }) => {
         return checkListModels.CheckList.findOneAndUpdate(
