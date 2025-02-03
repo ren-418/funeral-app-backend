@@ -152,14 +152,17 @@ const checkListController = {
             const removeFromSharedTo = (foundItem, receiverId) => {
                 foundItem.sharedTo = foundItem.sharedTo.filter(id => id !== receiverId);
             }
-            if (!foundItem.sharedTo.includes(recevierId)) {
+            if (foundItem.sharedTo.includes(recevierId)) {
                 removeFromSharedTo(foundItem, recevierId);
             } else {
-                return res.status(302).send({ message: "error", data: " Already unshared item" });
+                return res.status(302).send({ message: "error", data: "Already unshared item" });
             }
-
+    
             const removedShares = foundItem.sharedTo;
-            const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id }, update: { sharedTo: removedShares } });
+            const updatedItem = await checkListDatas.checkListDB.update({ 
+                filter: { id: id }, 
+                update: { sharedTo: removedShares } 
+            });
             emitNotificationOfCheckList(senderId, recevierId, updatedItem, false);
             return res.status(200).send({ message:"success" });
         } catch (err) {
@@ -167,6 +170,7 @@ const checkListController = {
             return res.status(200).send({ message: err.message || "internal error" });
         }
     },
+    
 }
 
 export default checkListController

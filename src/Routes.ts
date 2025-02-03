@@ -18,6 +18,7 @@ const Routes = async (router: express.Router) => {
 	router.post("/check-list/delete", Auth.controllers.middleware, CheckList.controllers.deleteItem);
 	router.post("/check-list/update", Auth.controllers.middleware, CheckList.controllers.updateItem);
 	router.post("/check-list/share", Auth.controllers.middleware, CheckList.controllers.shareItem);
+	router.post("/check-list/unshare", Auth.controllers.middleware, CheckList.controllers.unShareItem);
 	//vault
 	router.post("/vault/create", Auth.controllers.middleware, upload.single("file"), Vault.controllers.newVault);
 	router.post("/vault/getDetail", Auth.controllers.middleware, Vault.controllers.getOneItem);
@@ -25,6 +26,7 @@ const Routes = async (router: express.Router) => {
 	router.post("/vault/delete", Auth.controllers.middleware, Vault.controllers.deleteItem);
 	router.post("/vault/update", Auth.controllers.middleware, upload.single("file"), Vault.controllers.updateItem);
 	router.post("/vault/share", Auth.controllers.middleware, Vault.controllers.shareItem);
+	router.post("/vault/unshare", Auth.controllers.middleware, Vault.controllers.unShareItem);
 
 };
 
