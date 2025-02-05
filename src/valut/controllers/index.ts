@@ -30,19 +30,19 @@ const vaultController = {
                 return res.status(400).json({ error: 'Vault limit reached. Please subscribe to add more vaults.' });
             }
             const id = uuidv4();
-
+            console.log('file.path contoerller :::', file.path)
             await vaultDatas.vaultDB.create({
                 id: id,
                 userId: userId,
                 title: title,
                 desc: desc,
-                filePath: file.path,
+                filePath: "http://localhost:8000/src/uploads/1738733951731-509862283.png",
                 fileType: file.mimetype,
                 created: Date.now(),
                 sharedTo: []
             });
 
-            return res.status(200).json({ message: "success" });
+            return res.status(200).json({ message: "success",id:id });
         } catch (err) {
             setlog("request", err);
             return res.status(200).send({ message: err.message || "internal error" });

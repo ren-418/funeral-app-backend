@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const VaultSchema = new Schema({
     userId: { type: String, default: '' },
+    id: {type: String,default: "",},
     title: { type: String, default: '' },
     desc: { type: String, default: '' },
     created: {
