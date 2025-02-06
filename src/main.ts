@@ -4,14 +4,13 @@ import mongoose from "mongoose";
 import rateLimit from 'express-rate-limit'
 // import { Server } from "socket.io";
 import http from "http";
-import path from "path";
 // External Modules
 import { Routes } from "./Routes";
 import config from "../config.json";
 import setlog from "./utils/setlog";
+
 import { setUpSocket } from "./socket";
-import { Server, Socket } from "socket.io";
-let io: Server;
+import transaction from "./transaction";
 
 // Get router
 const router: express.Router = express.Router();
@@ -25,9 +24,7 @@ const limiter = rateLimit({
 })
 
 const connectDatabase = async (mongoUrl: string) => {
-
 	try {
-
 		const options = {
 			autoCreate: true,
 			keepAlive: true,
@@ -64,13 +61,16 @@ if (!config.debug) {
 // API Router
 
 
-
 Routes(router);
 app.use("/api", router);
 
 //Socket
 const httpServer = http.createServer(app);
 setUpSocket(httpServer);
+
+// cron
+const { updateIsFullAccessJob } = transaction.services;
+updateIsFullAccessJob();
 
 connectDatabase(config.DATABASE).then(() => {
 	httpServer.listen(config.PORT, () => {
@@ -81,7 +81,3 @@ connectDatabase(config.DATABASE).then(() => {
 });
 
 export default app;
-
-function createServer(app: express.Express) {
-	throw new Error("Function not implemented.");
-}

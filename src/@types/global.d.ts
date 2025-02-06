@@ -27,4 +27,11 @@ interface VaultDataObject {
 	fileType:string
 	sharedTo:string[],
 	created: number
-  }
+}
+
+interface TransactionDataObject {
+	id:string,
+	userId:string,
+	amount:number,
+	created:number
+}

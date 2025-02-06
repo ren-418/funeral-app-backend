@@ -26,8 +26,9 @@ const authController = {
 				name: name,
 				email: email,
 				password: hashedPassword,
-				created: Now(),
-				lasttime: Now(),
+				isFullAccess:true,
+				created: Date.now(),
+				lasttime: Date.now(),
 			});
 			return res.status(200).json({ message: "success" });
 		} catch (err) {
@@ -60,7 +61,7 @@ const authController = {
 			});
 			await authDatas.AuthDB.update({
 				filter: { email: email },
-				update: { lasttime: Now() }
+				update: { lasttime: Date.now() }
 			})
 			return res.status(200).json({ message: "success", token: token, email: email, });
 		} catch (err) {
@@ -105,7 +106,7 @@ const authController = {
 							email: userData.email
 						},
 						update: {
-							lasttime: Now()
+							lasttime: Date.now()
 						}
 					});
 					next();

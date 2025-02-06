@@ -16,7 +16,7 @@ const AuthSchema = new Schema({
 	},
 	isFullAccess: {
 		type:Boolean,
-		default:false
+		default:true
 	},
 	lasttime: {
 		type: Number,
