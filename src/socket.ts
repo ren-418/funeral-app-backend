@@ -1,9 +1,8 @@
+import { log } from "console";
 import { Server, Socket } from "socket.io";
 let io: Server;
 
 export const setUpSocket = (httpServer: any) => {
-    console.log("sdf");
-    
     io = new Server(httpServer);
     io.on("connection", (socket: Socket) => {
         console.log("New socket connection: ", socket.id);
@@ -37,6 +36,8 @@ export const emitNotificationOfVault = (sharedUser: string, getSharedUser: strin
                 sharedUser: sharedUser,
                 data: data
             });
+            console.log("jghfg");
+            
         } else {
             io.to(getSharedUser).emit("unshared-vault", {
                 sharedUser: sharedUser,

@@ -163,7 +163,7 @@ const vaultController = {
             const removeFromSharedTo = (foundItem, receiverId) => {
                 foundItem.sharedTo = foundItem.sharedTo.filter(id => id !== receiverId);
             }
-            if (!foundItem.sharedTo.includes(recevierId)) {
+            if (foundItem.sharedTo.includes(recevierId)) {
                 removeFromSharedTo(foundItem, recevierId);
             } else {
                 return res.status(302).send({ message: "error", data: " Already unshared item" });
