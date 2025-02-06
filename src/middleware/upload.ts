@@ -8,7 +8,6 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        console.log(uniqueSuffix);
         
         cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
     },
@@ -16,8 +15,6 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req: Request, file: any, cb: multer.FileFilterCallback) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'video/mp4', 'audio/mpeg', 'application/pdf'];
-    console.log(file.mimetype);
-    console.log('file.path :::', file.path)
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {

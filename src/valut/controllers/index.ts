@@ -27,12 +27,10 @@ const vaultController = {
                 return res.status(400).json({ error: 'No file uploaded.' });
             }
             const resultOfCheckAvailability = await checkavailabilityOfVault(userId)
-            console.log("checkavailabilityOfVault(userId) ::: ", )
             if (!resultOfCheckAvailability) {
                 return res.status(400).json({ error: 'Vault limit reached. Please subscribe to add more vaults.' });
             }
             const id = uuidv4();
-            console.log('file.path contoerller :::', file.path)
             await vaultDatas.vaultDB.create({
                 id: id,
                 userId: userId,

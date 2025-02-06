@@ -123,7 +123,6 @@ const checkListController = {
             }
             
             const addedShares = foundItem.sharedTo;
-            console.log("addedShares :::", addedShares, recevierId);
             const updatedItem = await checkListDatas.checkListDB.update({ filter: { id: id }, update: { sharedTo: addedShares } });
 
             emitNotificationOfCheckList(senderId, recevierId, updatedItem, true)

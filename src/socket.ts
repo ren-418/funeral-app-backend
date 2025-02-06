@@ -5,7 +5,6 @@ let io: Server;
 export const setUpSocket = (httpServer: any) => {
     io = new Server(httpServer);
     io.on("connection", (socket: Socket) => {
-        console.log("New socket connection: ", socket.id);
         socket.on("join", (data: any) => {
             socket.join(data.email);
         });
@@ -36,8 +35,6 @@ export const emitNotificationOfVault = (sharedUser: string, getSharedUser: strin
                 sharedUser: sharedUser,
                 data: data
             });
-            console.log("jghfg");
-            
         } else {
             io.to(getSharedUser).emit("unshared-vault", {
                 sharedUser: sharedUser,
