@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import rateLimit from 'express-rate-limit'
-import { Server } from "socket.io";
+// import { Server } from "socket.io";
 import http from "http";
 import path from "path";
 // External Modules
@@ -10,6 +10,8 @@ import { Routes } from "./Routes";
 import config from "../config.json";
 import setlog from "./utils/setlog";
 import { setUpSocket } from "./socket";
+import { Server, Socket } from "socket.io";
+let io: Server;
 
 // Get router
 const router: express.Router = express.Router();
@@ -71,7 +73,7 @@ const httpServer = http.createServer(app);
 setUpSocket(httpServer);
 
 connectDatabase(config.DATABASE).then(() => {
-	app.listen(config.PORT, () => {
+	httpServer.listen(config.PORT, () => {
 		setlog(`Server listening on ${config.PORT} port`);
 	});
 }).catch((err: any) => {

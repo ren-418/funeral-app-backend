@@ -64,15 +64,13 @@ const checkListController = {
             foundItemsByMyself.map((i, k) => {
                 if (i.sharedTo.length > 0) {
                     sharedByMe.push(i);
-                } else {
-                    basicCheckList.push(i);
                 }
             })
 
             if (!!foundItemsByMyself) {
                 return res.status(200).json({
                     message: "success", data: {
-                        basicCheckList: basicCheckList,
+                        basicCheckList: foundItemsByMyself,
                         sharedByMe: sharedByMe,
                         sharedByOthers: sharedByOthers
                     }

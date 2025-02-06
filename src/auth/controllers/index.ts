@@ -13,19 +13,19 @@ const authController = {
 	// This function is for signing up a new user.
 	signup: async (req: Request, res: Response) => {
 		try {
-			const { name, email, password} = req.body;
+			const { name, email, password } = req.body;
 
 			// service
 			const existsMail = await authService.checkExistOfAccount({ name, email });
 			if (existsMail.res === true) {
 				throw new Error(`${existsMail.param} is already exist!`);
-			};	
-			const hashedPassword =  await bcrypt.hash(password, 10);
+			};
+			const hashedPassword = await bcrypt.hash(password, 10);
 			// data access
 			await authDatas.AuthDB.create({
 				name: name,
 				email: email,
-				password:hashedPassword,
+				password: hashedPassword,
 				created: Now(),
 				lasttime: Now(),
 			});
@@ -37,7 +37,7 @@ const authController = {
 	},
 	login: async (req: Request, res: Response) => {
 		try {
-			const { email,password } = req.body;
+			const { email, password } = req.body;
 
 			// data access
 			const userData = await authDatas.AuthDB.findOne({
@@ -62,10 +62,24 @@ const authController = {
 				filter: { email: email },
 				update: { lasttime: Now() }
 			})
-			return res.status(200).json({ message: "success", token:token,email:email, });
+			return res.status(200).json({ message: "success", token: token, email: email, });
 		} catch (err) {
 			setlog("request", err);
 			res.status(200).send({ message: "internal error" });
+		}
+	},
+	getUserData: async (req: any, res: Response) => {
+		try {
+			const { userId } = req.body;
+			const foundUserItem = await authDatas.AuthDB.findOne({ filter: { email: userId } })
+			if (!!foundUserItem) {
+				return res.status(200).json({ message: "success", data: foundUserItem })
+			} else {
+				return res.status(404).json({message:"Found Failed"});
+			}
+		} catch (err) {
+			setlog("request",err);
+			return res.status(200).send({message:err.message || 'internlal error'})
 		}
 	},
 	middleware: (req: any, res: Response, next: NextFunction) => {
@@ -97,7 +111,7 @@ const authController = {
 					next();
 				}
 			);
-			
+
 		} catch (err: any) {
 			if (err) return res.sendStatus(403);
 		}

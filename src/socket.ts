@@ -2,14 +2,11 @@ import { Server, Socket } from "socket.io";
 let io: Server;
 
 export const setUpSocket = (httpServer: any) => {
-    io = new Server(httpServer, {
-        cors: {
-            origin: "*",
-            methods: ["GET", "POST"],
-        },
-    });
+    console.log("sdf");
+    
+    io = new Server(httpServer);
     io.on("connection", (socket: Socket) => {
-        console.log("Socket is connected");
+        console.log("New socket connection: ", socket.id);
         socket.on("join", (data: any) => {
             socket.join(data.email);
         });

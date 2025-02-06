@@ -26,7 +26,9 @@ const vaultController = {
             if (!file) {
                 return res.status(400).json({ error: 'No file uploaded.' });
             }
-            if (!checkavailabilityOfVault(userId)) {
+            const resultOfCheckAvailability = await checkavailabilityOfVault(userId)
+            console.log("checkavailabilityOfVault(userId) ::: ", )
+            if (!resultOfCheckAvailability) {
                 return res.status(400).json({ error: 'Vault limit reached. Please subscribe to add more vaults.' });
             }
             const id = uuidv4();
@@ -74,15 +76,13 @@ const vaultController = {
             foundItemsByMyself.map((i, k) => {
                 if (i.sharedTo.length > 0) {
                     sharedByMe.push(i);
-                } else {
-                    basicVaults.push(i);
                 }
             })
 
             if (!!foundItemsByMyself) {
                 return res.status(200).json({
                     message: "success", data: {
-                        basicVaults: basicVaults,
+                        basicVaults: foundItemsByMyself,
                         sharedByMe: sharedByMe,
                         sharedByOthers: sharedByOthers
                     }

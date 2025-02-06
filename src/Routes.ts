@@ -11,6 +11,7 @@ const Routes = async (router: express.Router) => {
 	//user
 	router.post("/signup", Auth.controllers.signup);
 	router.post("/login", Auth.controllers.login);
+	router.post("/getUserData", Auth.controllers.middleware, Auth.controllers.getUserData);
 	//check-list
 	router.post("/check-list/create", Auth.controllers.middleware, CheckList.controllers.newCheckList);
 	router.post("/check-list/getDetail", Auth.controllers.middleware, CheckList.controllers.getOneItem);

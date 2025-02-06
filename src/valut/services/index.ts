@@ -6,8 +6,10 @@ export const checkavailabilityOfVault = async (userId: string) => {
     if (user.isFullAccess) {
         return true;
     }
+    console.log("user.isFullAccess :::", user.isFullAccess)
     const exsitingVaults = await vaultDatas.vaultDB.find({ filter: { userId: userId } });
 
+    console.log("exsitingVaults.length :::", exsitingVaults.length)
     if (exsitingVaults.length < 3) {
         return true;
     }
