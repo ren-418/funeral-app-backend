@@ -26,7 +26,8 @@ const authController = {
 				name: name,
 				email: email,
 				password: hashedPassword,
-				isFullAccess:true,
+				isFullAccess: true,
+				subscription: null,
 				created: Date.now(),
 				lasttime: Date.now(),
 			});
@@ -76,11 +77,11 @@ const authController = {
 			if (!!foundUserItem) {
 				return res.status(200).json({ message: "success", data: foundUserItem })
 			} else {
-				return res.status(404).json({message:"Found Failed"});
+				return res.status(404).json({ message: "Found Failed" });
 			}
 		} catch (err) {
-			setlog("request",err);
-			return res.status(200).send({message:err.message || 'internlal error'})
+			setlog("request", err);
+			return res.status(200).send({ message: err.message || 'internlal error' })
 		}
 	},
 	middleware: (req: any, res: Response, next: NextFunction) => {

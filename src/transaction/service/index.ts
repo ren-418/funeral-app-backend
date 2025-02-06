@@ -34,18 +34,19 @@ const updateIsFullAccessJob = () => {
                 const usersToUpdate = await authDatas.AuthDB.find({
                     filter: {
                         isFullAccess: true,
-                        created: { $lt: oneDayago }
+                        created: { $lt: oneDayago },
+                        subscription: null
                     }
                 })
 
                 for (const transaction of transactionsToUpdate) {
                     const userId = transaction.userId;
-                    await authDatas.AuthDB.update({ filter: { userId: userId }, update: { isFullAccess: false } })
+                    await authDatas.AuthDB.update({ filter: { userId: userId }, update: { isFullAccess: false, subscription: null } })
                 }
 
                 for (const user of usersToUpdate) {
                     const userId = user.email;
-                    await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: false } })
+                    await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: false, subscription: null } })
                 }
             } catch (err) {
                 setlog("callback", err)

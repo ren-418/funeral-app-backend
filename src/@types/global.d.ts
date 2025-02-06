@@ -2,7 +2,8 @@ interface AuthDataObject {
 	name?: string
 	email?: string,
 	password?: string
-	isFullAccess?:boolean
+	isFullAccess?:boolean,
+	subscription?:number
 	lasttime: number
 	created: number
 }

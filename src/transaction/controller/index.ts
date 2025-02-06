@@ -5,6 +5,7 @@ import setlog from "../../utils/setlog";
 import transactionDatas from "../data-access";
 import transactionService from "../service";
 import config from "../../../config.json"
+import authDatas from "../../auth/data-access";
 
 const PAYPAL_CLIENT_ID = config.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET = config.PAYPAL_SECRET;
@@ -67,7 +68,7 @@ const transactionController = {
       }
 
       return res.status(200).json({ orderID: data.id, approvalUrl });
-      
+
     } catch (err) {
       setlog("request", err);
       return res.status(500).json({ message: err.message || "Internal error" });
@@ -100,6 +101,7 @@ const transactionController = {
           amount: data.purchase_units[0].payments.captures[0].amount.value,
           created: Date.now(),
         });
+        await authDatas.AuthDB.update({ filter: { userId: userId }, update: { subscription: Date.now() } });
 
         // Unlock full access for the user by calling your service
         const result = await transactionService.unlockFullAccess(userId);

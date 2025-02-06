@@ -14,10 +14,15 @@ const AuthSchema = new Schema({
 		type:String,
 		default:""
 	},
+	subscription: {
+		type:Number,
+		default:null
+	},
 	isFullAccess: {
 		type:Boolean,
 		default:true
 	},
+
 	lasttime: {
 		type: Number,
 		default: 0,
