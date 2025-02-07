@@ -2,6 +2,7 @@ import express from "express";
 import Auth from "./auth";
 import CheckList from "./check-list";
 import Vault from "./valut";
+import Transaction from "./transaction"
 import { upload } from "./middleware/upload";
 
 
@@ -28,7 +29,10 @@ const Routes = async (router: express.Router) => {
 	router.post("/vault/update", Auth.controllers.middleware, upload.single("file"), Vault.controllers.updateItem);
 	router.post("/vault/share", Auth.controllers.middleware, Vault.controllers.shareItem);
 	router.post("/vault/unshare", Auth.controllers.middleware, Vault.controllers.unShareItem);
-
+	//transaction
+	router.post("/transaction/create", Auth.controllers.middleware, Transaction.controllers.newTransaction)
+	router.post("/transaction/create-order", Auth.controllers.middleware, Transaction.controllers.createOrder)
+	router.post("/transaction/capture-order", Auth.controllers.middleware, Transaction.controllers.captureOrder)
 };
 
 export { Routes };
