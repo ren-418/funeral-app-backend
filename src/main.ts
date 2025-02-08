@@ -11,6 +11,7 @@ import setlog from "./utils/setlog";
 
 import { setUpSocket } from "./socket";
 import transaction from "./transaction";
+import path from "path";
 
 // Get router
 const router: express.Router = express.Router();
@@ -63,7 +64,7 @@ if (!config.debug) {
 
 Routes(router);
 app.use("/api", router);
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //Socket
 const httpServer = http.createServer(app);
 setUpSocket(httpServer);

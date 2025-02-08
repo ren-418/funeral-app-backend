@@ -36,7 +36,7 @@ const vaultController = {
                 userId: userId,
                 title: title,
                 desc: desc,
-                filePath: "http://localhost:8000/src/uploads/1738733951731-509862283.png",
+                filePath: `/uploads/${file.filename}` ,
                 fileType: file.mimetype,
                 created: Date.now(),
                 sharedTo: []

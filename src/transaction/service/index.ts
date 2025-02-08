@@ -22,7 +22,9 @@ const updateIsFullAccessJob = () => {
                 console.log(" cron.schedule called :::")
                 const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
                 const sevenDaysAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000));
-                const oneDayago = new Date(Date.now() - (1 * 24 * 60 * 60 * 1000));
+                // const oneDayago = new Date(Date.now() - (1 * 24 * 60 * 60 * 1000));
+                const oneDayago = new Date(Date.now() - (5 * 60 * 1000));
+
 
                 console.log("oneMinutesAgo :::", oneDayago)
                 const transactionsToUpdate = await transactionDatas.TransactionDB.find({

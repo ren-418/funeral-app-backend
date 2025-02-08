@@ -101,7 +101,7 @@ const transactionController = {
           amount: data.purchase_units[0].payments.captures[0].amount.value,
           created: Date.now(),
         });
-        await authDatas.AuthDB.update({ filter: { userId: userId }, update: { subscription: Date.now() } });
+        await authDatas.AuthDB.update({ filter: { email: userId }, update: { subscription: Date.now() } });
 
         // Unlock full access for the user by calling your service
         const result = await transactionService.unlockFullAccess(userId);
