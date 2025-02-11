@@ -26,7 +26,8 @@ const authController = {
 				name: name,
 				email: email,
 				password: hashedPassword,
-				isFullAccess:true,
+				isFullAccess: true,
+				subscription: null,
 				created: Date.now(),
 				lasttime: Date.now(),
 			});
@@ -69,6 +70,76 @@ const authController = {
 			res.status(200).send({ message: "internal error" });
 		}
 	},
+	googleLogin: async (req: Request, res: Response) => {
+		try {
+		  const { action,username,email } = req.body;
+		  console.log(req.body);
+		  
+		  const googleUser = {
+			email: email, 
+			name: username,
+		  };
+	
+		  let userData = await authDatas.AuthDB.findOne({ filter: { email: googleUser.email } });
+		  
+		  if (!userData && action === 'signUp') {
+			userData = await authDatas.AuthDB.create({
+			  name: googleUser.name,
+			  email: googleUser.email,
+			  password: '',
+			  isFullAccess: true,
+			  subscription: 0,
+			  created: Date.now(),
+			  lasttime: Date.now(),
+			});
+		  }
+		  
+		  if (!userData) {
+			return res.status(404).json({ message: 'User not found' });
+		  }
+		  
+		  const data = { email: googleUser.email, name: googleUser.name };
+		  const jwtToken = jwt.sign(data, config.JWT_SECRET, { expiresIn: '144h' });
+		  return res.status(200).json({ message: 'success', token: jwtToken, email: googleUser.email });
+		} catch (error) {
+		  setlog('request', error);
+		  return res.status(500).json({ message: 'Internal server error' });
+		}
+	  },
+	
+	  appleLogin: async (req: Request, res: Response) => {
+		try {
+		  const { token, action } = req.body;
+		  const appleUser = {
+			email: '', 
+			name: '',             
+		  };
+	
+		  let userData = await authDatas.AuthDB.findOne({ filter: { email: appleUser.email } });
+		  if (!userData && action === 'signUp') {
+			userData = await authDatas.AuthDB.create({
+			  name: appleUser.name,
+			  email: appleUser.email,
+			  password: '',
+			  isFullAccess: true,
+			  subscription: 0, 
+			  created: Date.now(),
+			  lasttime: Date.now(),
+			});
+		  }
+		  
+		  if (!userData) {
+			return res.status(404).json({ message: 'User not found' });
+		  }
+		  
+		  const data = { email: appleUser.email, name: appleUser.name };
+		  const jwtToken = jwt.sign(data, config.JWT_SECRET, { expiresIn: '144h' });
+		  return res.status(200).json({ message: 'success', token: jwtToken, email: appleUser.email });
+		} catch (error) {
+		  setlog('request', error);
+		  return res.status(500).json({ message: 'Internal server error' });
+		}
+	  },
 	getUserData: async (req: any, res: Response) => {
 		try {
 			const { userId } = req.body;
@@ -76,11 +147,11 @@ const authController = {
 			if (!!foundUserItem) {
 				return res.status(200).json({ message: "success", data: foundUserItem })
 			} else {
-				return res.status(404).json({message:"Found Failed"});
+				return res.status(404).json({ message: "Found Failed" });
 			}
 		} catch (err) {
-			setlog("request",err);
-			return res.status(200).send({message:err.message || 'internlal error'})
+			setlog("request", err);
+			return res.status(200).send({ message: err.message || 'internlal error' })
 		}
 	},
 	middleware: (req: any, res: Response, next: NextFunction) => {
