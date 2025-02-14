@@ -82,22 +82,17 @@ const authController = {
 	
 		  let userData = await authDatas.AuthDB.findOne({ filter: { email: googleUser.email } });
 		  
-		  if (!userData && action === 'signUp') {
+		  if (!userData) {
 			userData = await authDatas.AuthDB.create({
 			  name: googleUser.name,
 			  email: googleUser.email,
 			  password: '',
 			  isFullAccess: true,
-			  subscription: 0,
+			  subscription: null,
 			  created: Date.now(),
 			  lasttime: Date.now(),
 			});
 		  }
-		  
-		  if (!userData) {
-			return res.status(404).json({ message: 'User not found' });
-		  }
-		  
 		  const data = { email: googleUser.email, name: googleUser.name };
 		  const jwtToken = jwt.sign(data, config.JWT_SECRET, { expiresIn: '144h' });
 		  return res.status(200).json({ message: 'success', token: jwtToken, email: googleUser.email });

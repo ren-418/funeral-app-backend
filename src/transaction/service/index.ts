@@ -6,7 +6,7 @@ import setlog from "../../utils/setlog";
 
 const unlockFullAccess = async (userId: string) => {
     try {
-        await authDatas.AuthDB.update({ filter: { userId: userId }, update: { isFullAccess: true } });
+        await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: true } });
         return true;
     } catch (err: any) {
         setlog("MongoDB Error", err);
@@ -23,10 +23,10 @@ const updateIsFullAccessJob = () => {
                 const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
                 const sevenDaysAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000));
                 // const oneDayago = new Date(Date.now() - (1 * 24 * 60 * 60 * 1000));
-                const oneDayago = new Date(Date.now() - (5 * 60 * 1000));
+                // const oneDayago = new Date(Date.now() - (5 * 60 * 1000));
 
 
-                console.log("oneMinutesAgo :::", oneDayago)
+                console.log("oneMinutesAgo :::", sevenDaysAgo)
                 const transactionsToUpdate = await transactionDatas.TransactionDB.find({
                     filter: {
                         created: { $lt: oneYearAgo }
@@ -36,7 +36,7 @@ const updateIsFullAccessJob = () => {
                 const usersToUpdate = await authDatas.AuthDB.find({
                     filter: {
                         isFullAccess: true,
-                        created: { $lt: oneDayago },
+                        created: { $lt: sevenDaysAgo },
                         subscription: null
                     }
                 })

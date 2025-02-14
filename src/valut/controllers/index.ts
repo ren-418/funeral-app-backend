@@ -97,7 +97,7 @@ const vaultController = {
         try {
             const { id, userId, title, desc } = req.body;
             const file = req.file
-            const updatedItem = await vaultDatas.vaultDB.update({ filter: { id: id, userId: userId }, update: { title: title, desc: desc, filePath: file.path, fileType: file.mimetype } });
+            const updatedItem = await vaultDatas.vaultDB.update({ filter: { id: id, userId: userId }, update: { title: title, desc: desc, filePath: `/uploads/${file.filename}`, fileType: file.mimetype } });
             if (!!updatedItem) {
                 return res.status(200).json({ message: "success", data: updatedItem });
             } else {
