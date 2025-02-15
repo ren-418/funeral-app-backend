@@ -27,7 +27,7 @@ const authController = {
 				email: email,
 				password: hashedPassword,
 				isFullAccess: true,
-				subscription: null,
+				subscription: 0,
 				created: Date.now(),
 				lasttime: Date.now(),
 			});
@@ -88,7 +88,7 @@ const authController = {
 			  email: googleUser.email,
 			  password: '',
 			  isFullAccess: true,
-			  subscription: null,
+			  subscription: 0,
 			  created: Date.now(),
 			  lasttime: Date.now(),
 			});

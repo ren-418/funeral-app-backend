@@ -52,7 +52,7 @@ const vaultController = {
     getOneItem: async (req: Request, res: Response) => {
         try {
             const { id, userId } = req.body;
-            const foundItem = await vaultDatas.vaultDB.findOne({ filter: { id: id, userId: userId } });
+            const foundItem = await vaultDatas.vaultDB.findOne({ filter: { id: id } });
             if (!!foundItem) {
                 return res.status(200).json({ message: "success", data: foundItem });
             } else {
