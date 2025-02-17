@@ -23,7 +23,7 @@ const updateIsFullAccessJob = () => {
                 const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
                 const sevenDaysAgo = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000));
                 // const oneDayago = new Date(Date.now() - (1 * 24 * 60 * 60 * 1000));
-                // const oneDayago = new Date(Date.now() - (5 * 60 * 1000));
+                // const sevenDaysAgo = new Date(Date.now() - (1 * 60 * 1000));
 
 
                 console.log("oneMinutesAgo :::", sevenDaysAgo)
@@ -37,18 +37,17 @@ const updateIsFullAccessJob = () => {
                     filter: {
                         isFullAccess: true,
                         created: { $lt: sevenDaysAgo },
-                        subscription: null
+                        subscription: 0
                     }
                 })
-
                 for (const transaction of transactionsToUpdate) {
                     const userId = transaction.userId;
-                    await authDatas.AuthDB.update({ filter: { userId: userId }, update: { isFullAccess: false, subscription: null } })
+                    await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: false, subscription: 0 } })
                 }
 
                 for (const user of usersToUpdate) {
                     const userId = user.email;
-                    await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: false, subscription: null } })
+                    await authDatas.AuthDB.update({ filter: { email: userId }, update: { isFullAccess: false, subscription: 0 } })
                 }
             } catch (err) {
                 setlog("callback", err)

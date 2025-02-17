@@ -28,7 +28,7 @@ const vaultController = {
             }
             const resultOfCheckAvailability = await checkavailabilityOfVault(userId)
             if (!resultOfCheckAvailability) {
-                return res.status(400).json({ error: 'Vault limit reached. Please subscribe to add more vaults.' });
+                return res.status(200).json({ message: 'Vault limit reached. Please subscribe to add more vaults.' });
             }
             const id = uuidv4();
             await vaultDatas.vaultDB.create({
