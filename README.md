@@ -8,7 +8,6 @@ yarn install
 
 ### Run
 Make "logs" folder in root directory.
-Then Make the "uploads" folder in src directory. 
 ```bash
 yarn dev
 ```
