@@ -47,11 +47,7 @@ const transactionController = {
             },
             description: "Subscription Payment - $19.99/Year",
           },
-        ],
-        application_context: {
-          return_url: "https://yourbackend.com/paypal/success", // Change to your real URL
-          cancel_url: "https://yourbackend.com/paypal/cancel",   // Change to your real URL
-        },
+        ]
       };
 
       const accessToken = await getAccessToken();
