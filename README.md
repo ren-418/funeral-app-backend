@@ -107,6 +107,5 @@ The application supports the following file types:
 - Audio (MPEG)
 - Documents (PDF)
 
-## License
 
-[Add your license information here]
+
